@@ -1,0 +1,8 @@
+@fontface {
+  font-family: 'Bungee Inline', cursive;
+  src: url('https://fonts.googleapis.com/css?family=Poppins:400,500,600')
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
