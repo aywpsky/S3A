@@ -138,7 +138,7 @@ class AddSalesOrder extends Component {
                             <Row>
                                 <Col md={12}>
                                     <FormGroup>
-                                        <Label className="withClose">
+                                        <Label className="close_production">
                                             Job
                                             {(idx > 0) ? <button onClick={() => this.Splice(idx)} type="button" class="addMoreClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
                                         </Label>

@@ -109,6 +109,7 @@ class ModalViewDetails extends Component {
                             bordered
                             hover
                             data={data}
+                            className='job_sheet_details_modal'
                         />
                     </ModalBody>
                 </Modal>
