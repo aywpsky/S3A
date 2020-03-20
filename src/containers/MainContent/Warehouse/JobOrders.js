@@ -62,21 +62,32 @@ class JobOrders extends Component {
         let url = Config.base_url + 'warehouse/getJobOrder/' + id,
         response = await axios.get(url);
         let temp_data =[];
-
+        let main_data = [];
+        let cust = [];
         if (response.data.msg == 'success') {
-            console.log(response.data.result)
+            let data_temp_id = 1;
             response.data.result.map((data)=>{
-                temp_data = {
-                  company: data.company,
-                  job:data.job,
-                  description: data.dispatch_date,
-                  dispatch_date: data.dispatch_date,
-                  additional_details: data.additional_details,
-                  special_instruction: data.special_instruction,
-               }
+
+                if(data_temp_id != data.id){
+                    data_temp_id = data.id;
+                    cust = {
+                        company: data.company,
+                        description: data.description,
+                    }
+                    temp_data = {
+                        id: data.id,
+                        job:data.job,
+                        dispatch_date: data.dispatch_date,
+                        additional_details: data.additional_details,
+                        special_instruction: data.special_instruction,
+                    }
+
+                    main_data.push(temp_data);
+                }
             })
             this.props.handle_changes('job_order_data',response.data.result);
-            this.props.handle_changes('job_order_data_company',temp_data);
+            this.props.handle_changes('job_order_data_cust',cust);
+            this.props.handle_changes('job_order_data_company',main_data);
             this.props.set_toggle_modal('isModalOpen');
         }
 
@@ -86,7 +97,6 @@ class JobOrders extends Component {
             let id = e;
             let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
             response = await axios.get(url);
-            console.log(response.data);
             let temp_data =[];
             this.props.handle_changes('job_order_job_sheet_data',response.data);
             this.props.set_toggle_modal('displayJSModal');
@@ -141,6 +151,7 @@ const mapStateToProps = state => {
         job_order_data          : state.warehouseReducer.job_order_data,
         job_order_data_company  : state.warehouseReducer.job_order_data_company,
         job_order_job_sheet_data  : state.warehouseReducer.job_order_job_sheet_data,
+        job_order_data_cust  : state.warehouseReducer.job_order_data_cust,
     }
 }
 const mapActionToProps = dispatch => {

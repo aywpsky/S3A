@@ -21,8 +21,7 @@ class ModalView extends Component {
 
 
     render() {
-        const { job_order_data } = this.props.job_order_data_company;
-        // console.log(job_order_data);
+        const { job_order_data } = this.props;
         return (
             <AUX>
                 <Modal size="lg" isOpen={this.props.isModalOpen} toggle={() => this.props.set_toggle_modal('isModalOpen')} className="">
@@ -33,70 +32,78 @@ class ModalView extends Component {
                                 <tr>
                                     <td>
                                         <Label className="withClose">Customer</Label>
-                                        <p>{this.props.job_order_data_company.company}</p>
+                                        <p>{this.props.job_order_data_cust.company}</p>
                                     </td>
 
                                     <td>
                                         <Label className="control-label">Description</Label>
-                                        <p>{this.props.job_order_data_company.description}</p>
+                                        <p>{this.props.job_order_data_cust.description}</p>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <table id="view_js_table" className="table table-bordered mb-0 view_js_table">
-                            <tbody>
-                                <tr>
-                                    <td colSpan="4">
-                                        <Label>Job:</Label>
-                                        <span> {this.props.job_order_data_company.job}</span>
-                                    </td>
-                                </tr>
-                                {
-                                    this.props.job_order_data.map((data, key) => {
-                                        return (
-
+                        {
+                            this.props.job_order_data_company.map((dat, k) => {
+                                return (
+                                    <table id="view_js_table" className="table table-bordered mb-0 view_js_table">
+                                        <tbody>
                                             <tr>
-                                                <td>
-                                                    <Label>Substrate</Label>
-                                                    <p>{data.substrate}</p>
+                                                <td colSpan="4">
+                                                    <Label>Job:</Label>
+                                                    <span> {dat.job}</span>
                                                 </td>
-                                                <td>
-                                                    <Label>Cap</Label>
-                                                    <p>{data.cap}</p>
+                                            </tr>
+                                            {
+                                                this.props.job_order_data.map((data, idk) => {
+                                                    return (
+
+                                                        (data.id = dat.id)?
+                                                            <tr>
+                                                                <td>{console.log('first'+data.id)}
+                                                                    <Label>Substrate</Label>
+                                                                    <p>{data.substrate}</p>
+                                                                </td>
+                                                                <td>
+                                                                    <Label>Cap</Label>
+                                                                    <p>{data.cap}</p>
+                                                                </td>
+                                                                <td>
+                                                                    <Label>Quantity</Label>
+                                                                    <p>{data.quantity}</p>
+                                                                </td>
+                                                                <td>
+                                                                    <Label>Top Seal</Label>
+                                                                    <p>{data.top_seal}</p>
+                                                                </td>
+                                                            </tr>
+                                                        :''
+
+                                                    )
+                                                })
+                                            }
+                                            <tr>
+                                                <td colSpan="2">
+                                                    <Label>Special Instructions</Label>
+                                                    <p>{dat.special_instruction}</p>
                                                 </td>
-                                                <td>
-                                                    <Label>Quantity</Label>
-                                                    <p>{data.quantity}</p>
-                                                </td>
-                                                <td>
-                                                    <Label>Top Seal</Label>
-                                                    <p>{data.top_seal}</p>
+                                                <td colSpan="2">
+                                                    <Label>Additional Details</Label>
+                                                    <p>{dat.additional_details}</p>
                                                 </td>
                                             </tr>
 
-                                        )
-                                    })
-                                }
-                                <tr>
-                                    <td colSpan="2">
-                                        <Label>Special Instructions</Label>
-                                        <p>{this.props.job_order_data_company.special_instruction}</p>
-                                    </td>
-                                    <td colSpan="2">
-                                        <Label>Additional Details</Label>
-                                        <p>{this.props.job_order_data_company.additional_details}</p>
-                                    </td>
-                                </tr>
+                                            <tr>
+                                                <td colSpan="4">
+                                                    <Label>Dispatch Date</Label>
+                                                    <p>{dat.dispatch_date}</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
 
-                                <tr>
-                                    <td colSpan="4">
-                                        <Label>Dispatch Date</Label>
-                                        <p>{this.props.job_order_data_company.dispatch_date}</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
+                                    </table>
+                                );
+                            })
+                        }
                     </ModalBody>
                 </Modal>
             </AUX>
@@ -110,6 +117,7 @@ const mapStateToProps = state => {
         salesOrder_job: state.warehouseReducer.salesOrder_job,
         job_order_data: state.warehouseReducer.job_order_data,
         job_order_data_company: state.warehouseReducer.job_order_data_company,
+        job_order_data_cust: state.warehouseReducer.job_order_data_cust,
     }
 }
 const mapActionToProps = dispatch => {

@@ -1,6 +1,7 @@
 const initState = {
     job_sheet_id                :   '',
     job_order_data              :   [],
+    job_order_data_cust         :   [],
     job_order_job_sheet_data    :   [],
     job_order_data_company      :   [],
     job_order_data_new          :   {},

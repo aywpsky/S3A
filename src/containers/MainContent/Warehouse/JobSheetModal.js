@@ -66,7 +66,7 @@ class JobSheetModal extends Component {
         let id = this.props.js_id;
         let url = Config.base_url + 'printingdepartment/GetJobSheetData/' + id,
             response = await axios.get(url);
-
+            console.log(response.data.result)
         if (response.data.msg == 'success') {
             this.setState({ js_data: response.data.result });
         }
@@ -85,7 +85,7 @@ class JobSheetModal extends Component {
                                     <tr>
                                         <td>
                                             <Label>P.O. Date:</Label>
-                                            <Input name="po_date" value={Moment().format('MMMM DD YYYY')} readonly/>
+                                            <Input name="po_date" value={Moment().format('MMMM DD YYYY')} readOnly/>
                                         </td>
                                         <td>
                                             <Label>P.O. #:</Label>

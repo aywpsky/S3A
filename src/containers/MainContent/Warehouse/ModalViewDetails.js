@@ -35,47 +35,59 @@ class ModalViewDetails extends Component {
 
     render() {
         let temp_data =[];
+        let salesData = '';
         const { job_order_job_sheet_data } = this.props;
-        console.log(job_order_job_sheet_data)
-        // if (this.props.job_order_job_sheet_data) {
-        //     const m = this.props.job_order_job_sheet_data.map((key, idx) => {
-        //         let status = '';
-        //         switch (key.printing_dep_status) {
-        //
-        //             case '1':
-        //                 status = 'In-Progress';
-        //                break;
-        //             case '2':
-        //                 status = 'On-hold';
-        //                break;
-        //             case '3':
-        //                 status = 'Off-track';
-        //                break;
-        //             case '4':
-        //                 status = 'Completed';
-        //                break;
-        //
-        //             default:
-        //                 status = 'Pending';
-        //                break;
-        //          }
-        //
-        //
-        //         let percent = ((key.completed_qty / key.max_approved_laminate_with) * 100);
-        //
-        //         let x = {
-        //             jobOrderID: "JOID" + key.fk_sales_order_id,
-        //             jobSheetID: "JSID" + key.job_sheet_id,
-        //             department: key.company,
-        //             com_per:   <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} /> ,
-        //             num_item_com: key.max_approved_laminate_with,
-        //             num_com:  key.completed_qty ? key.completed_qty : '0',
-        //             status: status
-        //         }
-        //         temp_data.push(x);
-        //     });
-        //     this.setState({ salesData: temp_data })
-        // }
+        // console.log(job_order_job_sheet_data);
+        if (job_order_job_sheet_data.length > 0) {
+            const m = job_order_job_sheet_data.map((key, idx) => {
+                let status = '';
+                switch (key.printing_dep_status) {
+
+                    case '1':
+                        status = 'In-Progress';
+                       break;
+                    case '2':
+                        status = 'On-hold';
+                       break;
+                    case '3':
+                        status = 'Off-track';
+                       break;
+                    case '4':
+                        status = 'Completed';
+                       break;
+
+                    default:
+                        status = 'Pending';
+                       break;
+                 }
+
+
+                let percent = ((key.dep_completed_qty / key.max_approved_laminate_with) * 100);
+                let deparment = '';
+                let completed = '';
+                let num_to_complete = '';
+                if(key.dep_completed_qty != key.max_approved_laminate_with){
+                    deparment = 'Printing';
+                    completed = key.dep_completed_qty ? key.dep_completed_qty : '0';
+                    num_to_complete = key.max_approved_laminate_with;
+                }else{
+                    deparment = 'Production';
+                    completed = key.prod_completed_qty ? key.prod_completed_qty : '0';
+                    num_to_complete = key.max_approved_cap_with;
+                }
+                let x = {
+                    jobOrderID: "JOID" + key.fk_sales_order_id,
+                    jobSheetID: "JSID" + key.job_sheet_id,
+                    department: deparment ,
+                    com_per:   <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} /> ,
+                    num_com:  completed,
+                    num_item_com: num_to_complete,
+                    status: status
+                }
+                temp_data.push(x);
+            });
+            salesData =  temp_data ;
+        }
         const data = {
             columns: [
                 { label: 'Job Order ID', field: 'jobOrderID', width: 150 },
@@ -86,7 +98,7 @@ class ModalViewDetails extends Component {
                 { label: 'No. to Complete', field: 'num_com', width: 200 },
                 { label: 'Status', field: 'status', width: 200 }
             ],
-            rows: this.state.salesData
+            rows: salesData
         };
         return (
             <AUX>
