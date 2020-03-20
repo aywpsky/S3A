@@ -13,6 +13,11 @@ const initalState = {
 			[{'substrate' : '' , 'cap' : '' , 'quantity' : '' , 'topSeal' : ''}]
 		]
 	},
+    addMoreTube : {
+		form:[
+			[{'substrate' : '' , 'cap' : '' , 'quantity' : '' , 'topSeal' : ''}]
+		]
+	},
     js_data: [],
 }
 
@@ -38,14 +43,23 @@ class JobSheetModal extends Component {
     Splice = (parent_index) => {
         const { addMore  } = this.state;
         addMore.form.splice(parent_index , 1);
-        console.log(parent_index);
         this.setState({addMore});
         this.props.RemoveDataByIdx(parent_index);
     }
+    Splice2 = (parent_index) => {
+        console.log(parent_index);
+        const { addMoreTube  } = this.state;
+        addMoreTube.form.splice(parent_index , 1);
+        this.setState({addMoreTube});
+        this.props.RemoveDataByIdx(parent_index);
+    }
     AddMore = (index) => {
-        const {addMore} = this.state;
-        addMore.form.push([{'substrate' : '' , 'cap' : '' , 'quantity' : '' , 'topSeal' : ''}]);
-
+        const {addMore , addMoreTube} = this.state;
+        if(index == 1){
+            addMore.form.push([{'substrate' : '' , 'cap' : '' , 'quantity' : '' , 'topSeal' : ''}]);
+        }else{
+            addMoreTube.form.push([{'substrate' : '' , 'cap' : '' , 'quantity' : '' , 'topSeal' : ''}]);
+        }
         this.setState({addMore});
     }
     getJobSheetData = async () => {
@@ -71,11 +85,11 @@ class JobSheetModal extends Component {
                                     <tr>
                                         <td>
                                             <Label>P.O. Date:</Label>
-                                            <Input name="po_date" value={Moment().format('MMMM DD YYYY')}/>
+                                            <Input name="po_date" value={Moment().format('MMMM DD YYYY')} readonly/>
                                         </td>
                                         <td>
                                             <Label>P.O. #:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="po_number" required/>
                                         </td>
                                         <td>
                                             <Label>JS #:</Label>
@@ -137,7 +151,7 @@ class JobSheetModal extends Component {
                                             <tr  style={{ display:this.props.print_production_fields ? 'revert':'none'}}>
                                                 <td id="production_tr_div" colspan="100%">
                                                     <div className="production_div">
-                                                        <Label className="close_production">
+                                                        <Label className="close_production_btn">
                                                             {(idx > 0) ? <button onClick={() => this.Splice(idx)} type="button" class="productionClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
                                                         </Label>
                                                         <tr className="print_production_fields production_tr" style={{ display:this.props.print_production_fields ? 'revert':'none'}}>
@@ -179,7 +193,7 @@ class JobSheetModal extends Component {
                                         <td colSpan="2">
                                             <Row className="pluscont addMoreBtnJS">
                                                 <Col md={12} className={'addMore'}>
-                                                    <Button title="Add more" type="button" color="primary" className=" btn btn-secondary" onClick = {() => this.AddMore()}>
+                                                    <Button title="Add more" type="button" color="primary" className=" btn btn-secondary" onClick = {() => this.AddMore(1)}>
                                                         <i class="fas fa-plus"></i> Add More
                                                     </Button>
                                                 </Col>
@@ -192,12 +206,14 @@ class JobSheetModal extends Component {
                                         <th colSpan="2"><h5>Tube Production</h5>{this.props.table_production_fields?<i className="fas fa-angle-up"></i>:<i className="fas fa-angle-down"></i>}</th>
                                     </tr>
                                     {/*Table Production*/}
-                                    {this.state.addMore.form.map((val , idx) => {
+                                    {this.state.addMoreTube.form.map((val , idx) => {
                                         return(
                                             <tr >
                                                 <td id="production_tr_div" colspan="100%">
                                                     <div className="production_div">
-
+                                                        <Label className="close_production_btn">
+                                                            {(idx > 0) ? <button onClick={() => this.Splice2(idx)} type="button" class="productionClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
+                                                        </Label>
                                                         <tr className="print_production_fields production_tr" style={{ display:this.props.table_production_fields ? 'revert':'none'}}>
                                                             <td>
                                                                 <Label>Tube Diameter:</Label>
@@ -248,7 +264,7 @@ class JobSheetModal extends Component {
                                         <td colSpan="2">
                                             <Row className="pluscont addMoreBtnJS">
                                                 <Col md={12} className={'addMore'}>
-                                                    <Button title="Add more" type="button" color="primary" className=" btn btn-secondary" onClick = {() => this.AddMore()}>
+                                                    <Button title="Add more" type="button" color="primary" className=" btn btn-secondary" onClick = {() => this.AddMore(2)}>
                                                         <i class="fas fa-plus"></i> Add More
                                                     </Button>
                                                 </Col>

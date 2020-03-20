@@ -9,6 +9,7 @@ import { Row, Col, } from 'reactstrap';
 import GroupButton from '../../CustomComponents/GroupButton';
 import ModalView from './ModalView';
 import ModalViewDetails from './ModalViewDetails';
+import { ProgressBar  } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 
@@ -35,19 +36,18 @@ class JobOrders extends Component {
     GetSalesOrder = async (e) => {
         let response;
         let temp_data = [];
-        let url = Config.base_url + 'sales/getSalesOrder';
+        let url = Config.base_url + 'warehouse/getSalesOrder';
         response = await axios.post(url, '');
         if (response.data) {
             const m = response.data.list.map((key, idx) => {
                 let groupBtn = [
-                    { title: "Create Job Sheet",    icon: "ion-plus",      color: "primary",    function: () => this.props.set_toggle_modal('displayJSModal')},
+                    { title: "Create Job Sheet",    icon: "ion-plus",      color: "primary",    function: () => this.creatJobSheetModal(key.sales_id)},
                     { title: "View Job Order",      icon: "ion-eye",        color: "info",      function: () => this.openViewJobOrderDetails(key.sales_id) }
                 ];
                 let x = {
                     salesID :      "SOID" + key.sales_id.padStart(5, "0"),
                     joborder:      key.description,
                     company :      key.company,
-                    quantity:      parseInt(key.quantity).toLocaleString('en'),
                     dispatch_date: key.dispatch_date,
                     action: <GroupButton data={groupBtn} />
                 }
@@ -82,6 +82,17 @@ class JobOrders extends Component {
 
     }
 
+    creatJobSheetModal = async (e) =>{
+            let id = e;
+            let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
+            response = await axios.get(url);
+            console.log(response.data);
+            let temp_data =[];
+            this.props.handle_changes('job_order_job_sheet_data',response.data);
+            this.props.set_toggle_modal('displayJSModal');
+
+    }
+
     render() {
 
         const data = {
@@ -89,7 +100,6 @@ class JobOrders extends Component {
                 { label: 'SALES ID',      field: 'salesID',       width: 150 },
                 { label: 'JOB ORDER',     field: 'customer',      width: 200 },
                 { label: 'CUSTOMER',      field: 'company',       width: 200 },
-                { label: 'QUANTITY',      field: 'quantity',      width: 200 },
                 { label: 'DISPATCH DATE', field: 'dispatch_date', width: 200 },
                 { label: 'ACTION',        field: 'action',        width: 200 }
             ],
@@ -130,6 +140,7 @@ const mapStateToProps = state => {
         displayJSModal          : state.warehouseReducer.displayJSModal,
         job_order_data          : state.warehouseReducer.job_order_data,
         job_order_data_company  : state.warehouseReducer.job_order_data_company,
+        job_order_job_sheet_data  : state.warehouseReducer.job_order_job_sheet_data,
     }
 }
 const mapActionToProps = dispatch => {

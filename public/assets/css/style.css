@@ -3487,7 +3487,7 @@ li.page-item {
     right: 0;
 }
 .production_div{position: relative;}
-.close_production{position: absolute;}
+.close_production_btn{position: absolute;right: 0;}
 .productionClosebtn {
     font-size: 16px;
     font-weight: 700;
@@ -3500,8 +3500,8 @@ li.page-item {
     box-shadow: 0px 2px 10px #888;
     border: 1px solid #D4455D;
     position: absolute;
-    top: -11px;
-    right: 0;
+    top: 4px;
+    right: 3px;
 }
 .withClose{
     display: block
