@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AUX from '../../../hoc/Aux_';
-import { Row, Col, Label, ModalBody, Modal, ModalHeader, Input, Button } from 'reactstrap';
+import { Row, Col, Label, ModalBody,ModalFooter, Modal, ModalHeader, Input, Button } from 'reactstrap';
 import Config from "../../../config/Config";
 import axios from "axios";
 import Moment from 'moment';
@@ -37,9 +37,9 @@ class JobSheetModal extends Component {
     onClick3 = async () =>{
         this.props.set_toggle_modal('logistic_fields')
     }
-    componentDidMount() {
-        this.getJobSheetData();
-    }
+    // componentDidMount() {
+    //     this.getJobSheetData();
+    // }
     Splice = (parent_index) => {
         const { addMore  } = this.state;
         addMore.form.splice(parent_index , 1);
@@ -62,16 +62,17 @@ class JobSheetModal extends Component {
         }
         this.setState({addMore});
     }
-    getJobSheetData = async () => {
-        let id = this.props.js_id;
-        let url = Config.base_url + 'printingdepartment/GetJobSheetData/' + id,
-            response = await axios.get(url);
-            console.log(response.data.result)
-        if (response.data.msg == 'success') {
-            this.setState({ js_data: response.data.result });
-        }
-
-    }
+    // getJobSheetData = async () => {
+    //     console.log(this.props);
+    //     let id = this.props.fk_sales_order_id;
+    //     let url = Config.base_url + 'printingdepartment/GetJobSheetData/' + id,
+    //         response = await axios.get(url);
+    //         console.log(response.data)
+    //     if (response.data.msg == 'success') {
+    //         this.setState({ js_data: response.data.result });
+    //     }
+    //
+    // }
     render() {
         Moment.locale('en');
         return (
@@ -124,8 +125,7 @@ class JobSheetModal extends Component {
                                     </tr>
 
                                     <tr>
-                                        <td><Label>EXAL WAREHOUSE</Label></td>
-                                        <td>
+                                        <td colSpan='2'>
                                             <Label>Variant Description:</Label>
                                             <Input name="qty_req" required/>
                                         </td>
@@ -152,7 +152,7 @@ class JobSheetModal extends Component {
                                                 <td id="production_tr_div" colspan="100%">
                                                     <div className="production_div">
                                                         <Label className="close_production_btn">
-                                                            {(idx > 0) ? <button onClick={() => this.Splice(idx)} type="button" class="productionClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
+                                                            {(idx > 0) ? <button onClick={() => this.Splice(idx)} type="button" className="productionClosebtn" aria-label="Close"><span aria-hidden="true">×</span></button> : null}
                                                         </Label>
                                                         <tr className="print_production_fields production_tr" style={{ display:this.props.print_production_fields ? 'revert':'none'}}>
                                                             <td>
@@ -194,7 +194,7 @@ class JobSheetModal extends Component {
                                             <Row className="pluscont addMoreBtnJS">
                                                 <Col md={12} className={'addMore'}>
                                                     <Button title="Add more" type="button" color="primary" className=" btn btn-secondary" onClick = {() => this.AddMore(1)}>
-                                                        <i class="fas fa-plus"></i> Add More
+                                                        <i className="fas fa-plus"></i> Add More
                                                     </Button>
                                                 </Col>
                                             </Row>
@@ -265,7 +265,7 @@ class JobSheetModal extends Component {
                                             <Row className="pluscont addMoreBtnJS">
                                                 <Col md={12} className={'addMore'}>
                                                     <Button title="Add more" type="button" color="primary" className=" btn btn-secondary" onClick = {() => this.AddMore(2)}>
-                                                        <i class="fas fa-plus"></i> Add More
+                                                        <i className="fas fa-plus"></i> Add More
                                                     </Button>
                                                 </Col>
                                             </Row>
@@ -350,7 +350,10 @@ class JobSheetModal extends Component {
                             </table>
 
                         </ModalBody>
-
+                        <ModalFooter>
+                            <Button color="secondary" className="btn btn-secondary waves-effect" onClick={() => this.props.toggle()}>Cancel</Button>{' '}
+                            <Button type="submit" color="primary" className="btn btn-secondary waves-effect">Submit</Button>
+                        </ModalFooter>
                 </Modal>
                 {/*End Edit*/}
             </AUX>
@@ -366,6 +369,7 @@ const mapStateToProps = state => {
         print_production_fields: state.warehouseReducer.print_production_fields,
         table_production_fields: state.warehouseReducer.table_production_fields,
         logistic_fields: state.warehouseReducer.logistic_fields,
+        job_order_job_sheet_data: state.warehouseReducer.job_order_job_sheet_data,
     }
 }
 const mapActionToProps = dispatch => {

@@ -54,12 +54,13 @@ class ModalView extends Component {
                                                 </td>
                                             </tr>
                                             {
+
                                                 this.props.job_order_data.map((data, idk) => {
                                                     return (
 
-                                                        (data.id = dat.id)?
+                                                        (data.id == dat.id)?
                                                             <tr>
-                                                                <td>{console.log('first'+data.id)}
+                                                                <td>
                                                                     <Label>Substrate</Label>
                                                                     <p>{data.substrate}</p>
                                                                 </td>

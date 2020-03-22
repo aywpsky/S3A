@@ -21,20 +21,19 @@ class ViewRequests extends Component {
 	}
 
 	modalOpen = async (id) => {
-		alert(id);
 		let response;
-		let url = Config.base_url + 'testing_janu/get_single_requests/' + id;
+		let url = Config.base_url + 'warehouse/get_single_requests/' + id;
 		response = await axios.post(url, '');
 		console.log(response);
-		if (response.data) {
-			this.setState({
-				modalOpen: true,
-				raw_mat: response.data[0]['raw_material'],
-				department: response.data[0]['department'],
-				qty_requested: response.data[0]['quantity_requested']
-			})
-			console.log(this.state);
-		}
+		// if (response.data) {
+		// 	this.setState({
+		// 		modalOpen: true,
+		// 		raw_mat: response.data[0]['raw_material'],
+		// 		department: response.data[0]['department'],
+		// 		qty_requested: response.data[0]['quantity_requested']
+		// 	})
+		// 	console.log(this.state);
+		// }
 
 	}
 
@@ -47,7 +46,7 @@ class ViewRequests extends Component {
 	convertDate = (date) => {
 		var months_arr = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		var newDate = new Date(date);
-		var month = newDate.getMonth() - 1;
+		var month = newDate.getMonth();
 		var day = newDate.getDate();
 		var year = newDate.getFullYear();
 		return months_arr[month] + " " + day + ", " + year;
@@ -56,17 +55,18 @@ class ViewRequests extends Component {
 	GetRequest = async (e) => {
 		let response;
 		let temp_data = [];
-		let url = Config.base_url + 'testing_janu/get_requests';
+		let url = Config.base_url + 'warehouse/get_requests';
 		response = await axios.post(url, '');
+		console.log(response.data)
 		if (response.data) {
 			const m = response.data.map((key) => {
 				let x = {
 					request_id: "RID" + key.request_id.padStart(5, "0"),
-					raw_mat: key.raw_material,
+					raw_mat: key.material_name,
 					quantity_requested: key.quantity_requested.toLocaleString('en'),
-					department: key.department,
+					department: key.department != 0?'Production':'Printing',
 					date_requested: this.convertDate(key.date_requested),
-					status: key.status,
+					status: key.status != 0?'Approved':'Pending',
 					action: <div className="btn-group"><Button onClick={() => this.modalOpen(key.request_id)}><i className="ion-checkmark"></i></Button></div>
 				}
 				temp_data.push(x);

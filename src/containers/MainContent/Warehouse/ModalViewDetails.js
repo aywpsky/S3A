@@ -37,7 +37,6 @@ class ModalViewDetails extends Component {
         let temp_data =[];
         let salesData = '';
         const { job_order_job_sheet_data } = this.props;
-        // console.log(job_order_job_sheet_data);
         if (job_order_job_sheet_data.length > 0) {
             const m = job_order_job_sheet_data.map((key, idx) => {
                 let status = '';
