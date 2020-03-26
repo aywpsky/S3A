@@ -27,6 +27,14 @@ class ModalViewDetails extends Component {
     }
 
     createJobSheetNow = async (e) =>{
+        if(this.props.job_order_job_sheet_data.length > 0 ){
+            let id = this.props.job_order_job_sheet_data[0].fk_sales_order_id;
+            let url = Config.base_url + 'warehouse/getJobOrderData/' + id,
+            response = await axios.get(url);
+
+            this.props.handle_changes('create_js_data',response.data.create_js_data);
+            this.props.handle_changes('js_last_id',response.data.last_data);
+        }
         this.props.set_toggle_modal('createJSModal');
     }
     componentDidMount() {
@@ -37,7 +45,7 @@ class ModalViewDetails extends Component {
         let temp_data =[];
         let salesData = '';
         const { job_order_job_sheet_data } = this.props;
-        if (job_order_job_sheet_data.length > 0) {
+        if (job_order_job_sheet_data.length) {
             const m = job_order_job_sheet_data.map((key, idx) => {
                 let status = '';
                 switch (key.printing_dep_status) {
@@ -77,6 +85,7 @@ class ModalViewDetails extends Component {
                 let x = {
                     jobOrderID: "JOID" + key.fk_sales_order_id,
                     jobSheetID: "JSID" + key.job_sheet_id,
+                    jobName: key.job,
                     department: deparment ,
                     com_per:   <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} /> ,
                     num_com:  completed,
@@ -91,6 +100,7 @@ class ModalViewDetails extends Component {
             columns: [
                 { label: 'Job Order ID', field: 'jobOrderID', width: 150 },
                 { label: 'Job Sheet ID', field: 'jobSheetID', width: 150 },
+                { label: 'Job', field: 'jobName', width: 150 },
                 { label: 'Department', field: 'department', width: 200 },
                 { label: 'Completed Percentage', field: 'com_per', width: 200 },
                 { label: 'No. of items Completed', field: 'num_item_com', width: 200 },
@@ -103,7 +113,7 @@ class ModalViewDetails extends Component {
             <AUX>
                 <JobSheetModal />
 
-                <Modal size="lg" isOpen={this.props.displayJSModal} toggle={() => this.props.set_toggle_modal('displayJSModal')} className="">
+                <Modal size="xl" isOpen={this.props.displayJSModal} toggle={() => this.props.set_toggle_modal('displayJSModal')} className="">
                     <ModalHeader toggle={() => this.props.set_toggle_modal('displayJSModal')}>Jobsheet Details</ModalHeader>
                     <ModalBody>
                         <Row className="create_js_table">
@@ -131,11 +141,15 @@ const mapStateToProps = state => {
         displayJSModal: state.warehouseReducer.displayJSModal,
         createJSModal: state.warehouseReducer.createJSModal,
         job_order_job_sheet_data: state.warehouseReducer.job_order_job_sheet_data,
+        job_order_data: state.warehouseReducer.job_order_data,
+        create_js_data: state.warehouseReducer.create_js_data,
+        js_last_id: state.warehouseReducer.js_last_id,
     }
 }
 const mapActionToProps = dispatch => {
     return {
         set_toggle_modal: (state) => dispatch({ type: 'TOGGLE_MODAL' ,state: state}),
+        handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
     }
 }
 export default connect(mapStateToProps, mapActionToProps)(ModalViewDetails);

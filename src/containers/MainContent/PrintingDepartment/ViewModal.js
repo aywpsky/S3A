@@ -79,8 +79,7 @@ class ViewModal extends Component {
                                         </tr>
 
                                         <tr>
-                                            <td><Label>EXAL WAREHOUSE</Label></td>
-                                            <td>
+                                            <td colSpan='2'>
                                                 <Label>Variant Description:</Label>
                                                 <p>100ml Naturacentials Nigeria</p>
                                             </td>

@@ -1,6 +1,8 @@
 const initState = {
     job_sheet_id                :   '',
     job_order_data              :   [],
+    create_js_data              :   [],
+    js_last_id                  :   '',
     job_order_data_cust         :   [],
     job_order_job_sheet_data    :   [],
     job_order_data_company      :   [],

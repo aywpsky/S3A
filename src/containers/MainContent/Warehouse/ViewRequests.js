@@ -12,7 +12,7 @@ import qs from 'qs';
 class ViewRequests extends Component {
 	constructor() {
 		super();
-		this.state = { request: [], raw_mat: '', qty_rcv: '', department: '', date_requested: '', modalOpen: false, qty_requested: '' }
+		this.state = { request: [], raw_mat: '', qty_rcv: '', department: '', date_requested: '', modalOpenDel: false, qty_requested: '',id: '' }
 
 	}
 	componentDidMount() {
@@ -20,21 +20,35 @@ class ViewRequests extends Component {
 		Alertify.defaults = Config.AlertConfig
 	}
 
-	modalOpen = async (id) => {
-		let response;
-		let url = Config.base_url + 'warehouse/get_single_requests/' + id;
-		response = await axios.post(url, '');
-		console.log(response);
-		// if (response.data) {
-		// 	this.setState({
-		// 		modalOpen: true,
-		// 		raw_mat: response.data[0]['raw_material'],
-		// 		department: response.data[0]['department'],
-		// 		qty_requested: response.data[0]['quantity_requested']
-		// 	})
-		// 	console.log(this.state);
-		// }
+	toggleDel = () =>{
+	   this.setState({
+		  modalOpenDel : !this.state.modalOpenDel,
+	   })
+	 }
 
+	 approveBtn = async() => {
+		 let response;
+		 let id = this.state.id
+		 let url = Config.base_url + 'warehouse/get_single_requests/' + id;
+		 response = await axios.post(url, '');
+
+
+		 if (response.data) {
+            Alertify.success('Successfully Approved!');
+            this.setState({modalOpenDel: false});
+			this.GetRequest();
+		}else if(response.data == 0){
+            Alertify.error('Stocks not available!');
+		}else{
+			Alertify.error('Something went wrong!');
+		}
+	 }
+
+	modalOpen = async (id) => {
+			this.setState({
+				modalOpenDel : !this.state.modalOpenDel,
+	  		  	id:id,
+			})
 	}
 
 	toggleModal = () => {
@@ -67,7 +81,7 @@ class ViewRequests extends Component {
 					department: key.department != 0?'Production':'Printing',
 					date_requested: this.convertDate(key.date_requested),
 					status: key.status != 0?'Approved':'Pending',
-					action: <div className="btn-group"><Button onClick={() => this.modalOpen(key.request_id)}><i className="ion-checkmark"></i></Button></div>
+					action: <div className="btn-group" style={{display:key.status != 0 ?'none':'block'}}><Button color="success" onClick={() => this.modalOpen(key.request_id)} ><i className="ion-checkmark"></i></Button></div>
 				}
 				temp_data.push(x);
 			})
@@ -183,6 +197,19 @@ class ViewRequests extends Component {
 							</ModalFooter>
 						</form>
 					</ModalBody>
+				</Modal>
+
+
+
+				<Modal isOpen={this.state.modalOpenDel} toggle={this.toggleDel}>
+				  <ModalHeader toggle={this.toggleDel}>Approve Request</ModalHeader>
+				  <ModalBody>
+					  <p>Are you sure you to approve this request?</p>
+				   <ModalFooter>
+						<Button color="primary" className="btn btn-secondary waves-effect" onClick={this.toggleDel}>Cancel</Button>
+						<Button type="submit" onClick={this.approveBtn} color="success" className="btn btn-secondary waves-effect">Yes</Button>
+				   </ModalFooter>
+				  </ModalBody>
 				</Modal>
 
 			</AUX>

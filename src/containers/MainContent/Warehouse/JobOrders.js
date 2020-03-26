@@ -98,7 +98,6 @@ class JobOrders extends Component {
             let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
             response = await axios.get(url);
             let temp_data =[];
-            console.log(response.data);
             this.props.handle_changes('job_order_job_sheet_data',response.data);
             this.props.set_toggle_modal('displayJSModal');
 
