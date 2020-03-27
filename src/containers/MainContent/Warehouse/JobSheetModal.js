@@ -85,7 +85,6 @@ class JobSheetModal extends Component {
             last_id = this.props.js_last_id;
             let js_number = parseInt(last_id[0].job_sheet_id)+1;
 
-            console.log(js_number);
              cjs = {
                 date: Moment(create_js_data[0].job_date).format('MMMM DD YYYY'),
                 po: 'JOID'+create_js_data[0].sales_id,
@@ -104,7 +103,7 @@ class JobSheetModal extends Component {
                                     <tr>
                                         <td>
                                             <Label>P.O. Date:</Label>
-                                            <Input name="po_date" value={Moment(cjs.date).format('MMMM DD YYYY')} readOnly/>
+                                            <Input name="po_date" value={cjs.date} readOnly/>
                                         </td>
                                         <td>
                                             <Label>P.O. #:</Label>

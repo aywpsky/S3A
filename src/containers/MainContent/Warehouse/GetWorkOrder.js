@@ -14,9 +14,10 @@ class List extends React.Component{
     }
 
     async componentDidMount(){
-        let url = Config.base_url+'api/viewRaw';
+        let url = Config.base_url+'warehouse/viewWorkOrder';
         let response = await axios.get(url);
         const material = response.data;
+
         this.setState({material});
     }
 
@@ -27,7 +28,7 @@ class List extends React.Component{
                 <Input type="select" name="workOrder">
                     {
                         this.state.material.map((val) => {
-                            return <option value={val.raw_id}>{val.material_name}</option>
+                            return <option value={val.id}>{val.job}</option>
                         })
                     }
                 </Input>
