@@ -25,6 +25,7 @@ class List extends React.Component{
             <>
                 <Label>{this.props.label}</Label>
                 <Input type="select" name="material_requested[]">
+                <option value={'none'}> - Select Materials - </option>
                     {
                         this.state.material.map((val) => {
                             return <option value={val.raw_id}>{val.material_name}</option>

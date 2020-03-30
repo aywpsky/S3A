@@ -95,6 +95,8 @@ class JobOrders extends Component {
 
     creatJobSheetModal = async (e) =>{
             let id = e;
+            this.props.handle_changes('job_sheet_id',id);
+
             let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
             response = await axios.get(url);
             let temp_data =[];
@@ -152,6 +154,7 @@ const mapStateToProps = state => {
         job_order_data_company  : state.warehouseReducer.job_order_data_company,
         job_order_job_sheet_data  : state.warehouseReducer.job_order_job_sheet_data,
         job_order_data_cust  : state.warehouseReducer.job_order_data_cust,
+        job_sheet_id  : state.warehouseReducer.job_sheet_id,
     }
 }
 const mapActionToProps = dispatch => {

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Component }  from "react";
 import axios from "axios";
 import { Input, Label } from "reactstrap";
 import Config from '../../../config/Config';
+import { connect } from 'react-redux';
 
-
-class List extends React.Component{
+class List extends Component {
 
     constructor(props){
         super(props);
@@ -14,7 +14,8 @@ class List extends React.Component{
     }
 
     async componentDidMount(){
-        let url = Config.base_url+'warehouse/viewWorkOrder';
+        let id = this.props.job_sheet_id;
+        let url = Config.base_url+'warehouse/viewWorkOrder/'+id;
         let response = await axios.get(url);
         const material = response.data;
 
@@ -36,5 +37,14 @@ class List extends React.Component{
         )
     }
 }
-
-export default List;
+const mapStateToProps = state => {
+    return {
+        job_sheet_id: state.warehouseReducer.job_sheet_id,
+    }
+}
+const mapActionToProps = dispatch => {
+    return {
+        handle_changes: (state, value) => dispatch({ type: 'HANDLE_CHANGE', state: state, value: value }),
+    }
+}
+export default connect(mapStateToProps, mapActionToProps)(List);

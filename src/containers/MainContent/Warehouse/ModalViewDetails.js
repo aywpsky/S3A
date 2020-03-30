@@ -27,8 +27,8 @@ class ModalViewDetails extends Component {
     }
 
     createJobSheetNow = async (e) =>{
-        if(this.props.job_order_job_sheet_data.length > 0 ){
-            let id = this.props.job_order_job_sheet_data[0].fk_sales_order_id;
+        if(this.props.job_sheet_id){
+            let id = this.props.job_sheet_id;
             let url = Config.base_url + 'warehouse/getJobOrderData/' + id,
             response = await axios.get(url);
 
@@ -144,6 +144,7 @@ const mapStateToProps = state => {
         job_order_data: state.warehouseReducer.job_order_data,
         create_js_data: state.warehouseReducer.create_js_data,
         js_last_id: state.warehouseReducer.js_last_id,
+        job_sheet_id: state.warehouseReducer.job_sheet_id,
     }
 }
 const mapActionToProps = dispatch => {

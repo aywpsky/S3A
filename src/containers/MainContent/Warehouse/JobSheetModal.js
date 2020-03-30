@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import AUX from '../../../hoc/Aux_';
-import { Row, Col, Label, ModalBody,ModalFooter, Modal, ModalHeader, Input, Button } from 'reactstrap';
+import { Row, Col, Label, ModalBody,ModalFooter, Modal, ModalHeader, Input, Button, Form } from 'reactstrap';
 import Config from "../../../config/Config";
 import axios from "axios";
 import Moment from 'moment';
@@ -8,6 +8,7 @@ import Listprint from "./GetMaterials";
 import Listprod from "./GetMaterialsProd";
 import ListWork from "./GetWorkOrder";
 import { connect } from 'react-redux';
+import Alertify from 'alertifyjs';
 import $ from 'jquery';
 
 const initalState = {
@@ -30,6 +31,22 @@ class JobSheetModal extends Component {
         this.state = initalState;
 
     }
+
+     submit = async (e,id) => {
+        e.preventDefault();
+        let jo_id = id;
+        let url = Config.base_url + 'warehouse/submitJobSheet';
+        let formdata = new FormData(e.target);
+        formdata.append('so_id' ,jo_id );
+        let response = await axios.post(url , formdata);
+        if (response.data.status == 'success') {
+            Alertify.success(response.data.msg);
+            this.props.set_toggle_modal('createJSModal');
+        }else{
+            Alertify.error(response.data.msg);
+        }
+    }
+
 
     onClick = async () =>{
         this.props.set_toggle_modal('print_production_fields')
@@ -64,17 +81,7 @@ class JobSheetModal extends Component {
         }
         this.setState({addMore});
     }
-    // getJobSheetData = async () => {
-    //     console.log(this.props);
-    //     let id = this.props.fk_sales_order_id;
-    //     let url = Config.base_url + 'printingdepartment/GetJobSheetData/' + id,
-    //         response = await axios.get(url);
-    //         console.log(response.data)
-    //     if (response.data.msg == 'success') {
-    //         this.setState({ js_data: response.data.result });
-    //     }
-    //
-    // }
+
     render() {
         Moment.locale('en');
         let create_js_data = [];
@@ -88,6 +95,7 @@ class JobSheetModal extends Component {
              cjs = {
                 date: Moment(create_js_data[0].job_date).format('MMMM DD YYYY'),
                 po: 'JOID'+create_js_data[0].sales_id,
+                sales_id:create_js_data[0].sales_id,
                 js: 'JSID'+js_number,
                 company: create_js_data[0].company,
             }
@@ -98,6 +106,7 @@ class JobSheetModal extends Component {
                 <Modal size="lg" isOpen={this.props.createJSModal} toggle={() => this.props.set_toggle_modal('createJSModal')} className="">
                     <ModalHeader toggle={() => this.props.set_toggle_modal('createJSModal')}>Create Jobsheet</ModalHeader>
                         <ModalBody className="ViewPrintingJob">
+                            <Form method="POST" onSubmit= {(e) => this.submit(e , cjs.sales_id)}>
                             <table id="first_table" className="table table-bordered mb-0 first_table">
                                 <tbody>
                                     <tr>
@@ -133,29 +142,29 @@ class JobSheetModal extends Component {
                                     <tr>
                                         <td>
                                             <Label>Ship To:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="ship_to" required/>
                                         </td>
                                         <td>
                                             <Label>Batchcode:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="batchcode" required/>
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td colSpan='2'>
                                             <Label>Variant Description:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="var_des" required/>
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td>
                                             <Label>Target Delivery Qty:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="target_del_qty" required/>
                                         </td>
                                         <td >
                                             <Label>Complete Order By:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="com_order_by" required/>
                                         </td>
                                     </tr>
 
@@ -174,29 +183,29 @@ class JobSheetModal extends Component {
                                                         <tr className="print_production_fields production_tr" style={{ display:this.props.print_production_fields ? 'revert':'none'}}>
                                                             <td>
                                                                 <Label>Laminate:</Label>
-                                                                <Listprint />
+                                                                <Listprint js_id={this.props.job_sheet_id}/>
                                                             </td>
                                                             <td >
                                                                 <Label>Laminate Thickness:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="laminate_thickness[]"/>
                                                             </td>
                                                         </tr>
 
                                                         <tr className="print_production_fields production_tr" style={{display:this.props.print_production_fields ? 'revert':'none'}}>
                                                             <td>
                                                                 <Label>Laminate Width:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="laminate_width[]" type="number"/>
                                                             </td>
                                                             <td >
                                                                 <Label>Max Approved Laminate Withdrawal:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input type="number" name="max_approve_laminate_with[]"/>
                                                             </td>
                                                         </tr>
 
                                                         <tr className="print_production_fields last_tr" style={{display:this.props.print_production_fields ? 'revert':'none'}}>
                                                             <td colSpan="2">
                                                                 <Label>Laminate Color:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="laminate_color[]"/>
                                                             </td>
                                                         </tr>
 
@@ -238,36 +247,36 @@ class JobSheetModal extends Component {
                                                             </td>
                                                             <td >
                                                                 <Label>Cap Type:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="cap_type[]"/>
                                                             </td>
                                                         </tr>
 
                                                         <tr className="print_production_fields production_tr" style={{display:this.props.table_production_fields ? 'revert':'none'}}>
                                                             <td>
                                                                 <Label>Tube Length:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="tube_length[]" type="number"/>
                                                             </td>
                                                             <td >
                                                                 <Label>Seal:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="seal[]"/>
                                                             </td>
                                                         </tr>
 
                                                         <tr className="print_production_fields production_tr" style={{display:this.props.table_production_fields ? 'revert':'none'}}>
                                                             <td>
                                                                 <Label>Resin Type:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="resin_type[]"/>
                                                             </td>
                                                             <td >
                                                                 <Label>Max Approved Cap Withdrawal:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input type="number" name="max_approve_cap_with[]"/>
                                                             </td>
                                                         </tr>
 
                                                         <tr className="print_production_fields last_tr" style={{display:this.props.table_production_fields ? 'revert':'none'}}>
                                                             <td colSpan="2">
                                                                 <Label>Thread Type:</Label>
-                                                                <Input name="qty_req" required/>
+                                                                <Input name="thread_type[]"/>
                                                             </td>
                                                         </tr>
 
@@ -298,23 +307,23 @@ class JobSheetModal extends Component {
 
                                     <tr className="print_production_fields" style={{ display:this.props.logistic_fields ? 'revert':'none'}}>
                                         <td>
-                                            <Label>Packagin Box Size:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Label>Packaging Box Size:</Label>
+                                            <Input name="packaging_box_size" type="number" required/>
                                         </td>
                                         <td >
                                             <Label>Max Approved Box Withdrawal:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="max_approve_box_with" required/>
                                         </td>
                                     </tr>
 
                                     <tr className="print_production_fields" style={{display:this.props.logistic_fields ? 'revert':'none'}}>
                                         <td>
                                             <Label>Quantity per Box:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="qty_per_box" type="number" required/>
                                         </td>
                                         <td >
                                             <Label>Boxes to Deliver:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="boxes_to_deliver" type="number"  required/>
                                         </td>
                                     </tr>
                                     {/* Logistic*/}
@@ -322,55 +331,56 @@ class JobSheetModal extends Component {
                                     <tr>
                                         <td>
                                             <Label>Released By:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="released_by" required/>
                                         </td>
                                         <td >
                                             <Label>Q.A.Leader:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="qa_leader" required/>
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td>
                                             <Label>Issue Date:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="issue_date" value={Moment().format('MMMM DD YYYY')}required/>
 
                                         </td>
                                         <td >
                                             <Label>Production Leader:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="prod_leader" required/>
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td>
                                             <Label>Materials Check by:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="mat_check_by" required/>
                                         </td>
                                         <td >
                                             <Label>Toolings Checked By:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="toolings_checked_by" required/>
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td>
                                             <Label>Remarks:</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="remarks" required/>
                                         </td>
                                         <td >
                                             <Label>NO UNDERRUN;</Label>
-                                            <Input name="qty_req" required/>
+                                            <Input name="no_underrun" required/>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
 
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" className="btn btn-secondary waves-effect" onClick={() => this.props.toggle()}>Cancel</Button>{' '}
-                            <Button type="submit" color="primary" className="btn btn-secondary waves-effect">Submit</Button>
-                        </ModalFooter>
+                                <ModalFooter>
+                                    <Button color="secondary" className="btn btn-secondary waves-effect" onClick={() => this.props.toggle()}>Cancel</Button>{' '}
+                                    <Button type="submit" color="primary" className="btn btn-secondary waves-effect">Submit</Button>
+                                </ModalFooter>
+                            </Form>
+                    </ModalBody>
                 </Modal>
                 {/*End Edit*/}
             </AUX>
@@ -389,6 +399,7 @@ const mapStateToProps = state => {
         job_order_job_sheet_data: state.warehouseReducer.job_order_job_sheet_data,
         create_js_data: state.warehouseReducer.create_js_data,
         js_last_id: state.warehouseReducer.js_last_id,
+        job_sheet_id: state.warehouseReducer.job_sheet_id,
     }
 }
 const mapActionToProps = dispatch => {
