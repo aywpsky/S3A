@@ -3,6 +3,8 @@ import PageTitle from '../../CustomComponents/PageTitle';
 import {Col , Row , Card , CardBody } from 'reactstrap';
 import ProductionCost from './ProductionCost';
 import FinishedProduct from './FinishedProduct';
+import TurnOver from './TurnOver';
+import TotalSales from './TotalSales';
 import AUX from '../../../hoc/Aux_';
 class Dashboard extends Component {
     constructor(props){
@@ -38,12 +40,25 @@ class Dashboard extends Component {
                             </CardBody>
                         </Card>
                     </Col>
-
-                    {/*For Later*/}
                     <Col md={6}sm={12}>
                         <Card>
                             <CardBody>
-
+                                <Row>
+                                    <Col md={12}>
+                                        <h4 class="mt-0 header-title">Inventory Turnover</h4>
+                                        <TurnOver />
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                        <Card>
+                            <CardBody>
+                                <Row>
+                                    <Col md={12}>
+                                        <h4 class="mt-0 header-title">Inventory Turnover</h4>
+                                        <TotalSales />
+                                    </Col>
+                                </Row>
                             </CardBody>
                         </Card>
                     </Col>
