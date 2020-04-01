@@ -159,7 +159,8 @@ class EditSalesOrder extends Component {
                                         {val.additional_details.map((val2 , idx2) => {
             								return(
             									<Row className="addMoreMats">
-                                                    <Input type="hidden" name="job_details_id[]" value = {val2.pk_sales_order_job_details_id}/>
+                                                    <Input type="hidden" name={"pk_sales_order_job_details_id["+idx+"]["+idx2+"]"} value = {val2.pk_sales_order_job_details_id}/>
+                                                    <Input type="hidden" name={"fk_sales_order_details_id["+idx+"]["+idx2+"]"} value = {val.id}/>
             										<Col md={3}>
             				                            <FormGroup>
             				                                <Label>Substrate</Label>
