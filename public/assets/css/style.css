@@ -1559,7 +1559,7 @@ button:focus{
     color:#2a3142;
     background-color:#e9ecef
 }
-.job_sheet_details_modal .progress{
+.job_sheet_details_modal .progress, .printing-department-user .progress,  .production_table .progress{
     background-color: #c8cece;
     height: 30px;
 }
