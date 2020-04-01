@@ -6,6 +6,7 @@ import {  Modal, ModalHeader,Col} from 'reactstrap';
 import { MDBDataTable,} from 'mdbreact';
 import Config from '../../../config/Config';
 import Alertify from 'alertifyjs';
+import { ProgressBar  } from 'react-bootstrap';
 import ViewModal from './ViewModal';
 import axios from 'axios';
 import RequestModal from './RequestModal';
@@ -85,7 +86,7 @@ class JobOrder extends Component {
                 ];
                 let status = '';
                 switch (key.printing_dep_status) {
-                    
+
                     case '1':
                         status = 'In-Progress';
                        break;
@@ -98,7 +99,7 @@ class JobOrder extends Component {
                     case '4':
                         status = 'Completed';
                        break;
-                    
+
                     default:
                         status = 'Pending';
                        break;
@@ -112,7 +113,7 @@ class JobOrder extends Component {
                     dispath_date: key.dispatch_date,
                     no_to_complete: key.max_approved_laminate_with,
                     no_completed: key.completed_qty ? key.completed_qty : '0',
-                    completed_per: percent.toFixed(2) + ' %',
+                    completed_per: <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} />,
                     status: status,
                     action: <GroupButton data={groupBtn} />,
 

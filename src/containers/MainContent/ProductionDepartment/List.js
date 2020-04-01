@@ -9,6 +9,7 @@ import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter , Form , FormGroup, Label , Input , Row,ButtonGroup, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import ViewModal from './ViewModal';
 import RequestModal from './RequestModal';
+import { ProgressBar  } from 'react-bootstrap';
 import Confirm from "./Confirm";
 import AddCompleted from "./AddCompleted";
 import {connect} from 'react-redux';
@@ -134,15 +135,15 @@ class List extends Component {
                         {title: "Request Material",icon: "ion-plus",color:"warning", function: () => this.requestForm(key.job_sheet_id)},
                     ];
                 }
-                let per = parseInt(key.completed_qty) / parseInt(key.max_approved_laminate_with) * 100;
+                let per = parseInt(key.completed_qty) / parseInt(key.max_approved_cap_with) * 100;
 
                 let x = {
                     js_no: "ID" + key.job_sheet_id.padStart(5, "0"),
                     js_name: key.job,
                     dispath_date: key.dispatch_date,
-                    no_to_complete:key.max_approved_laminate_with,
+                    no_to_complete:key.max_approved_cap_with,
                     no_completed: key.completed_qty,
-                    percentage: '% ' + per.toFixed(2),
+                    percentage: <ProgressBar now={per.toFixed(2)} label={`${per.toFixed(2)}%`} />,
                     status: this.Status(key.production_dep_status),
                     action:<GroupButton data={groupBtn}/>,
                 }
@@ -181,6 +182,7 @@ class List extends Component {
                              bordered
                              hover
                              data={data}
+                             className= "production_table"
                           />
                        </div>
                 </Col>
