@@ -101,11 +101,24 @@ class JobOrders extends Component {
         this.props.handle_changes('job_order_job_sheet_data',response.data);
     }
 
+    checkJobSheetData = async (e) =>{
+        let id = this.props.job_sheet_id;
+        let url = Config.base_url + 'warehouse/viewWorkOrder/' + id,
+        response = await axios.get(url);
+
+        if(response.data.length == 0){
+            this.props.handle_changes('is_job_sheet_complete',true);
+        }else{
+            this.props.handle_changes('is_job_sheet_complete',false);
+        }
+    }
+
     creatJobSheetModal = async (e) =>{
             this.props.handle_changes('job_sheet_id',e);
             var my = this;
             setTimeout(function () {
                 my.displayJobSheetData(my.props.job_sheet_id);
+                my.checkJobSheetData(my.props.job_sheet_id);
             }, 100);
             this.props.set_toggle_modal('displayJSModal');
 
@@ -161,6 +174,7 @@ const mapStateToProps = state => {
         job_order_job_sheet_data  : state.warehouseReducer.job_order_job_sheet_data,
         job_order_data_cust  : state.warehouseReducer.job_order_data_cust,
         job_sheet_id  : state.warehouseReducer.job_sheet_id,
+        is_job_sheet_complete  : state.warehouseReducer.is_job_sheet_complete,
     }
 }
 const mapActionToProps = dispatch => {
