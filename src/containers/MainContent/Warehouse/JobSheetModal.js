@@ -42,6 +42,7 @@ class JobSheetModal extends Component {
         if (response.data.status == 'success') {
             Alertify.success(response.data.msg);
             this.props.set_toggle_modal('createJSModal');
+            this.props.refresh(this.props.job_sheet_id)
         }else{
             Alertify.error(response.data.msg);
         }
@@ -242,12 +243,12 @@ class JobSheetModal extends Component {
                                                         </Label>
                                                         <tr className="print_production_fields production_tr" style={{ display:this.props.table_production_fields ? 'revert':'none'}}>
                                                             <td>
-                                                                <Label>Tube Diameter:</Label>
+                                                                <Label>Cap Type:</Label>
                                                                 <Listprod />
                                                             </td>
                                                             <td >
-                                                                <Label>Cap Type:</Label>
-                                                                <Input name="cap_type[]"/>
+                                                                <Label>Tube Diameter:</Label>
+                                                                <Input name="tube_diameter[]"/>
                                                             </td>
                                                         </tr>
 

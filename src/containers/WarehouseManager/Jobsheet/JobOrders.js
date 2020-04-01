@@ -93,14 +93,20 @@ class JobOrders extends Component {
 
     }
 
-    creatJobSheetModal = async (e) =>{
-            let id = e;
-            this.props.handle_changes('job_sheet_id',id);
+    displayJobSheetData = async (e) =>{
+        let id = this.props.job_sheet_id;
+        let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
+        response = await axios.get(url);
+        let temp_data =[];
+        this.props.handle_changes('job_order_job_sheet_data',response.data);
+    }
 
-            let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
-            response = await axios.get(url);
-            let temp_data =[];
-            this.props.handle_changes('job_order_job_sheet_data',response.data);
+    creatJobSheetModal = async (e) =>{
+            this.props.handle_changes('job_sheet_id',e);
+            var my = this;
+            setTimeout(function () {
+                my.displayJobSheetData(my.props.job_sheet_id);
+            }, 100);
             this.props.set_toggle_modal('displayJSModal');
 
     }
@@ -122,7 +128,7 @@ class JobOrders extends Component {
             <AUX>
 
                 <ModalView/>
-                <ModalViewDetails />
+                <ModalViewDetails refresh={() => this.displayJobSheetData(this.props.job_sheet_id)}/>
 
                 <Row>
                     <Col sm={12}>

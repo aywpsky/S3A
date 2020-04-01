@@ -111,7 +111,7 @@ class ModalViewDetails extends Component {
         };
         return (
             <AUX>
-                <JobSheetModal />
+                <JobSheetModal refresh={() => this.props.refresh(this.props.job_sheet_id)}/>
 
                 <Modal size="xl" isOpen={this.props.displayJSModal} toggle={() => this.props.set_toggle_modal('displayJSModal')} className="">
                     <ModalHeader toggle={() => this.props.set_toggle_modal('displayJSModal')}>Jobsheet Details</ModalHeader>

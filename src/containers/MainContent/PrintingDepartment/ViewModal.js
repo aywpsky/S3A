@@ -10,6 +10,7 @@ class ViewModal extends Component {
         super(props);
         this.state = {
             js_data: [],
+            print_data: [],
         }
     }
 
@@ -22,7 +23,7 @@ class ViewModal extends Component {
             response = await axios.get(url);
 
         if (response.data.msg == 'success') {
-            this.setState({ js_data: response.data.result });
+            this.setState({ js_data: response.data.result.all_data, print_data: response.data.result.printing});
         }
 
     }
@@ -98,35 +99,48 @@ class ViewModal extends Component {
                                         <tr>
                                             <th colSpan="2"><h5>Print Production</h5></th>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <Label>Laminate:</Label>
-                                                <p> {data.laminate}</p>
-                                            </td>
-                                            <td >
-                                                <Label>Laminate Thickness:</Label>
-                                                <p> {data.laminate_width}</p>
-                                            </td>
-                                        </tr>
 
-                                        <tr>
-                                            <td>
-                                                <Label>Laminate Width:</Label>
-                                                <p> {data.laminate_width}</p>
-                                            </td>
-                                            <td >
-                                                <Label>Max Approved Laminate Withdrawal:</Label>
-                                                <p> {data.max_approved_laminate_with}</p>
-                                            </td>
-                                        </tr>
+                                        {
+                                            this.state.print_data.map((datas, keys) => {
+                                                return (
+                                                    <tr>
+                                                        <td id="production_tr_div" colspan="100%">
+                                                            <div className="production_div">
+                                                                <tr>
+                                                                    <td>
+                                                                        <Label>Laminate:</Label>
+                                                                        <p> {datas.material_name}</p>
+                                                                    </td>
+                                                                    <td >
+                                                                        <Label>Laminate Thickness:</Label>
+                                                                        <p> {datas.laminate_width}</p>
+                                                                    </td>
+                                                                </tr>
 
-                                        <tr>
-                                            <td colSpan="2">
-                                                <Label>Laminate Color:</Label>
-                                                <p> {data.laminate_color}</p>
-                                            </td>
-                                        </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Label>Laminate Width:</Label>
+                                                                        <p> {datas.laminate_width}</p>
+                                                                    </td>
+                                                                    <td >
+                                                                        <Label>Max Approved Laminate Withdrawal:</Label>
+                                                                        <p> {datas.max_approved_laminate_with}</p>
+                                                                    </td>
+                                                                </tr>
 
+                                                                <tr>
+                                                                    <td colSpan="2">
+                                                                        <Label>Laminate Color:</Label>
+                                                                        <p> {datas.laminate_color}</p>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
                                         <tr>
                                             <td>
                                                 <Label>Released By:</Label>

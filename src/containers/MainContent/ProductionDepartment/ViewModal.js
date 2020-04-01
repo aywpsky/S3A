@@ -10,6 +10,7 @@ class ViewModal extends Component {
         super(props);
         this.state = {
             js_data: [],
+            prod_data: [],
         }
     }
 
@@ -18,11 +19,11 @@ class ViewModal extends Component {
     }
     getJobSheetData = async () => {
         let id = this.props.js_id;
-        let url = Config.base_url + 'printingdepartment/GetJobSheetData/' + id,
+        let url = Config.base_url + 'production/GetJobSheetData/' + id,
             response = await axios.get(url);
 
         if (response.data.msg == 'success') {
-            this.setState({ js_data: response.data.result });
+            this.setState({ js_data: response.data.result.all_data, prod_data: response.data.result.production });
         }
 
     }
@@ -99,34 +100,58 @@ class ViewModal extends Component {
                                         <tr>
                                             <th colSpan="2"><h5>Production</h5></th>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <Label>Laminate:</Label>
-                                                <p> {data.laminate}</p>
-                                            </td>
-                                            <td >
-                                                <Label>Laminate Thickness:</Label>
-                                                <p> {data.laminate_width}</p>
-                                            </td>
-                                        </tr>
+                                        {
+                                            this.state.prod_data.map((datas, keys) => {
+                                                return (
+                                                    <tr>
+                                                        <td id="production_tr_div" colspan="100%">
+                                                            <div className="production_div">
+                                                                <tr>
+                                                                    <td>
+                                                                        <Label>Cap Type:</Label>
+                                                                        <p> {datas.material_name}</p>
+                                                                    </td>
+                                                                    <td >
+                                                                        <Label>Tube Diameter:</Label>
+                                                                        <p> {datas.tube_diameter}</p>
+                                                                    </td>
+                                                                </tr>
 
-                                        <tr>
-                                            <td>
-                                                <Label>Laminate Width:</Label>
-                                                <p> {data.laminate_width}</p>
-                                            </td>
-                                            <td >
-                                                <Label>Max Approved Laminate Withdrawal:</Label>
-                                                <p> {data.max_approved_laminate_with}</p>
-                                            </td>
-                                        </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Label>Tube Length:</Label>
+                                                                        <p> {datas.tube_length}</p>
+                                                                    </td>
+                                                                    <td >
+                                                                        <Label>Seal:</Label>
+                                                                        <p> {datas.seal}</p>
+                                                                    </td>
+                                                                </tr>
 
-                                        <tr>
-                                            <td colSpan="2">
-                                                <Label>Laminate Color:</Label>
-                                                <p> {data.laminate_color}</p>
-                                            </td>
-                                        </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Label>Resin Type:</Label>
+                                                                        <p> {datas.resin_type}</p>
+                                                                    </td>
+                                                                    <td >
+                                                                        <Label>Max Approved Cap Withdrawal:</Label>
+                                                                        <p> {datas.max_approved_cap_with}</p>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td colSpan="2">
+                                                                        <Label>Thread Type:</Label>
+                                                                        <p> {datas.laminate_color}</p>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
 
                                         <tr>
                                             <td>
