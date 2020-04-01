@@ -70,21 +70,17 @@ class SalesOrder extends Component {
         response = await axios.post(url, '');
         if (response.data.status == 'ok') {
             const {list} = response.data;
+
             list.map((key, idx) => {
                 let groupBtn = [
-                    { title: "Edit", icon: "ion-edit", color: "info", function: () => this.getSalesData(key.id , key.company) },
+                    { title: "Edit", icon: "ion-edit", color: "info", function: () => this.getSalesData(key.sales_id , key.fk_customer_id) },
                     { title: "Remove", icon: "ion-trash-a", color: "primary", function: () => this.DeleteSales(key.id) }
                 ];
                 let x = {
-                    salesID: "SOID" + key.id.padStart(5, "0"),
-                    job: key.job,
+                    salesID: "SOID" + key.sales_id.padStart(5, "0"),
+                    job: key.description,
                     customer: key.company,
-                    substrate: key.substrate,
-                    cap: parseInt(key.cap).toLocaleString('en'),
-                    quantity: parseInt(key.quantity).toLocaleString('en'),
-                    top_seal: (key.top_seal == 1) ? "YES" : "NO",
-                    status: (key.status == 0) ? "Pending" : (key.status == 1) ? "In Progress" : "",
-                    dispatch_date: key.dispatch_date,
+                    dispatch:key.dispatch_date,
                     action: <GroupButton data={groupBtn} />
                 }
                 temp_data.push(x);
@@ -93,14 +89,15 @@ class SalesOrder extends Component {
         }
     }
 
-    getSalesData = async(sales_id ,customer) => {
+    getSalesData = async(sales_id , company_fk_id) => {
         let url = Config.base_url + 'sales/getSO/' + sales_id;
         const res = await axios.get(url);
         if (res.data.status == 'ok') {
-            const {list , sales_description}  = res.data;
-			this.props.setSalesData(sales_id, list , customer , sales_description);
+            const {list} = res.data;
+            this.props.setSalesData(list ,sales_id , company_fk_id);
             this.props.editModal();
         }
+
     }
 
     UpdateSalesOrder = async (e) => {
@@ -135,13 +132,9 @@ class SalesOrder extends Component {
                 { label: 'SALES ID', field: 'salesID', width: 150 },
                 { label: 'JOB', field: 'job', width: 270 },
                 { label: 'CUSTOMER', field: 'customer', width: 200 },
-                { label: 'SUBSTRATE', field: 'substrate', width: 270 },
-                { label: 'CAP', field: 'cap', width: 200 },
-                { label: 'QUANTITY', field: 'quantity', width: 270 },
-                { label: 'TOP SEAL', field: 'top_seal', width: 200 },
-                { label: 'STATUS', field: 'status', width: 270 },
-                { label: 'DISPATCH DATE', field: 'dispatch_date', width: 200 },
-                { label: 'ACTION', field: 'action', width: 200 }
+                { label: 'DISPATCH DATE', field: 'dispatch', width: 200 },
+                { label: 'ACTION', field: 'action', width: 200 },
+
             ],
             rows: this.state.salesData
         };
@@ -202,7 +195,7 @@ const mapStateToProps = state => {
 const mapActionToProps = dispatch => {
     return{
         toggle : () => dispatch({type : 'toggleModal'}),
-        setSalesData : (sales_id, salesData , customer , sales_description) => dispatch({type : 'setSalesData'  , sales_id:sales_id , salesData : salesData , customer : customer , sales_description : sales_description}),
+        setSalesData : (salesData , id , company_fk_id) => dispatch({type : 'setSalesData'  , salesData : salesData  , sales_id : id ,company_fk_id:company_fk_id }),
         editModal : (salesData) => dispatch({type : 'editModal'}),
     }
 }

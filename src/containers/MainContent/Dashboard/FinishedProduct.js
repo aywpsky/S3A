@@ -30,6 +30,8 @@ class FinishedProduct extends Component {
 		const {date} = this.state
 		const url = Config.base_url + `expenses/getJobOrderList/${date}`;
 		axios.get(url).then( res => {
+            console.log(res);
+            return;
 			const {total_cost} = res.data.list;
 			let total = 0;
 			total_cost.forEach((value, i) => {

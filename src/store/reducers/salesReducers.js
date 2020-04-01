@@ -14,6 +14,8 @@ const initState = {
     add_details : [],
     dispatch_date : [],
 	sales_description: '',
+    sales_id : '',
+    company_fk_id : ''
 
 }
 
@@ -47,9 +49,9 @@ const salesReducers = (state = initState, action) => {
             return {
                 ...state,
                 editSalesData: action.salesData,
-				sales_description: action.sales_description,
-                salesOrderId: action.sales_id,
-                customer: action.customer,
+                sales_id : action.sales_id,
+                company_fk_id : action.company_fk_id
+
             }
 
         case 'setJob':
