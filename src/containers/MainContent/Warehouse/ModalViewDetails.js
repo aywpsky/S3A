@@ -116,7 +116,8 @@ class ModalViewDetails extends Component {
                 <Modal size="xl" isOpen={this.props.displayJSModal} toggle={() => this.props.set_toggle_modal('displayJSModal')} className="">
                     <ModalHeader toggle={() => this.props.set_toggle_modal('displayJSModal')}>Jobsheet Details</ModalHeader>
                     <ModalBody>
-                        <Row className="create_js_table">
+
+                        <Row className="create_js_table" style={{display: this.props.is_job_sheet_complete == false ?'block':'none'}}>
                             <Col sm={12}>
                                 <button type="button" className="float-right btn btn-info real-btn btn btn-secondary" onClick={this.createJobSheetNow} name="fromDate">Create</button>
                             </Col>
@@ -145,6 +146,7 @@ const mapStateToProps = state => {
         create_js_data: state.warehouseReducer.create_js_data,
         js_last_id: state.warehouseReducer.js_last_id,
         job_sheet_id: state.warehouseReducer.job_sheet_id,
+        is_job_sheet_complete: state.warehouseReducer.is_job_sheet_complete,
     }
 }
 const mapActionToProps = dispatch => {
