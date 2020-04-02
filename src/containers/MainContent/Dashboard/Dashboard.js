@@ -55,7 +55,7 @@ class Dashboard extends Component {
                             <CardBody>
                                 <Row>
                                     <Col md={12}>
-                                        <h4 class="mt-0 header-title">Inventory Turnover</h4>
+                                        
                                         <TotalSales />
                                     </Col>
                                 </Row>

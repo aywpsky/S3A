@@ -160,7 +160,7 @@ class SalesOrder extends Component {
                     <Col sm={12}>
                         <div className="card m-b-20">
                             <div className="card-body table_shift">
-                                <Button type="button" className="btn btn-primary real-btn btn btn-secondary" onClick={() => this.props.toggle()}>Add Job Sheet</Button>
+                                <Button type="button" className="btn btn-primary real-btn btn btn-secondary" onClick={() => this.props.toggle()}>Add Job Order</Button>
 
                                 <br />
                                 <br />

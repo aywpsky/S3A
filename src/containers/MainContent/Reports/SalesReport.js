@@ -56,7 +56,7 @@ export default class SalesReport extends Component{
         let dates = Helper.formatDate(date);
         const url = Config.base_url + 'reports/filterlist';
         const res = await axios.post(url , qs.stringify({date : dates , table : 'tbl_sales_order_details'}));
-        
+
         let temp = [];
         if (res.data.msg === 'nodata') {
             Alertify.warning('No Data found.');
