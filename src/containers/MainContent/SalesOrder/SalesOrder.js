@@ -72,21 +72,68 @@ class SalesOrder extends Component {
             const {list} = response.data;
 
             list.map((key, idx) => {
-                let groupBtn = [
-                    { title: "Edit", icon: "ion-edit", color: "info", function: () => this.getSalesData(key.sales_id , key.fk_customer_id) },
-                    { title: "Remove", icon: "ion-trash-a", color: "primary", function: () => this.DeleteSales(key.id) }
-                ];
-                let x = {
-                    salesID: "SOID" + key.sales_id.padStart(5, "0"),
-                    job: key.description,
-                    customer: key.company,
-                    dispatch:key.dispatch_date,
-                    action: <GroupButton data={groupBtn} />
-                }
+                const process_data = this.getProcessData(key.sales_id);
+                process_data.then(prog => {
+
+                    let groupBtn = [
+                        { title: "Edit", icon: "ion-edit", color: "info", function: () => this.getSalesData(key.sales_id , key.fk_customer_id) },
+                        { title: "Remove", icon: "ion-trash-a", color: "primary", function: () => this.DeleteSales(key.id) }
+                    ];
+                    let x = {};
+                    if(prog.status === 'ok'){
+                        console.log(prog.data.wip)
+                        x = {
+                            salesID: "SOID" + key.sales_id.padStart(5, "0"),
+                            job: key.description,
+                            customer: key.company,
+                            dispatch:key.dispatch_date,
+                            wip : prog.data.wip,
+                            delivered : prog.data.delivered,
+                            total_completed : prog.data.completed,
+                            action: <GroupButton data={groupBtn} />
+                        }
+                    }else{
+                        x = {
+                            salesID: "SOID" + key.sales_id.padStart(5, "0"),
+                            job: key.description,
+                            customer: key.company,
+                            dispatch:key.dispatch_date,
+                            wip : '-',
+                            delivered : '-',
+                            total_completed :'-',
+                            action: <GroupButton data={groupBtn} />
+                        }
+                    }
+
                 temp_data.push(x);
+
+                })
+                const me = this;
+                setTimeout(function(){
+                    me.setState({ salesData: temp_data })
+                }, 1000);
             });
-            this.setState({ salesData: temp_data })
         }
+    }
+
+    getProcessData = async(sales_id) => {
+        let data = {};
+        let status = [];
+        const process_datas = await axios.get(Config.base_url + 'sales/'+'getJobOrderProcess/' + sales_id);
+        const {result , msg} = process_datas.data;
+        if(msg === 'success'){
+            data = {
+                wip : result['work_in_progress'],
+                completed : result['completed'],
+                delivered : result['delivered']
+            };
+            status = {"status" : "ok" , 'data': data};
+        }else{
+            status = {"status" : "nodata"};
+        }
+
+        return status;
+
     }
 
     getSalesData = async(sales_id , company_fk_id) => {
