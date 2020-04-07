@@ -133,6 +133,9 @@ class SalesOrder extends Component {
                 { label: 'JOB', field: 'job', width: 270 },
                 { label: 'CUSTOMER', field: 'customer', width: 200 },
                 { label: 'DISPATCH DATE', field: 'dispatch', width: 200 },
+                { label: 'Work in Progress', field: 'wip', width: 200 },
+                { label: 'Delivered', field: 'delivered', width: 200 },
+                { label: 'Total Completed', field: 'total_completed', width: 200 },
                 { label: 'ACTION', field: 'action', width: 200 },
 
             ],
