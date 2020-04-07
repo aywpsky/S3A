@@ -20,6 +20,10 @@ class ModalViewDetails extends Component {
         this.state = {
             salesData: '',
             modalOpenDeliver: false,
+            workInProgress: 0,
+            completed: 0,
+            delivered: 0,
+            job: '',
         }
     }
 
@@ -45,8 +49,16 @@ class ModalViewDetails extends Component {
     updateDeliverBtn = async() => {
         let response;
         let id = this.state.id
-        let url = Config.base_url + 'warehouse/updateDelivery/' + id;
-        response = await axios.post(url, '');
+        const {workInProgress, completed,delivered, job }      = this.state;
+        let url = Config.base_url + 'warehouse/updateDelivery/'+id;
+        const formData  = new FormData();
+
+        formData.append('workInProgress' , workInProgress);
+        formData.append('delivered' , delivered);
+        formData.append('completed' , completed);
+        formData.append('job' , job);
+
+        response = await axios.post(url, formData);
 
 
         if (response.data) {
@@ -60,10 +72,14 @@ class ModalViewDetails extends Component {
        }
     }
 
-    modalOpen = async (id) => {
+    modalOpen = async (id,workInProgress,completed,delivered,job) => {
 			this.setState({
 				modalOpenDeliver : !this.state.modalOpenDeliver,
 	  		  	id:id,
+                workInProgress: workInProgress,
+                completed: completed,
+                delivered: delivered,
+                job: job,
 			})
 	}
     toggleDel = () =>{
@@ -130,7 +146,7 @@ class ModalViewDetails extends Component {
                     com_per:   <ProgressBar now={percent.toFixed(2)} label={`${percent.toFixed(2)}%`} /> ,
                     total_com:  total,
                     work_in_prog: work_in_prog,
-                    for_del:   completed != 0 ? <button className="btn btn-success" onClick={() => this.modalOpen(key.job_sheet_id)} type="button">{completed} - Deliver Now</button> : 0,
+                    for_del:   completed != 0 ? <button className="btn btn-success" onClick={() => this.modalOpen(key.job_sheet_id,work_in_prog,completed,delivered,key.job)} type="button">{completed} - Deliver Now</button> : 0,
                     del: delivered,
                     num_com:  num_to_complete,
                     status: status
