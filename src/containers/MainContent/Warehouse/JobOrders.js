@@ -8,6 +8,7 @@ import { MDBDataTable } from 'mdbreact';
 import { Row, Col, } from 'reactstrap';
 import GroupButton from '../../CustomComponents/GroupButton';
 import ModalView from './ModalView';
+import ViewProcess from './ViewProcess';
 import ModalViewDetails from './ModalViewDetails';
 import { ProgressBar  } from 'react-bootstrap';
 import { connect } from 'react-redux';
@@ -43,6 +44,7 @@ class JobOrders extends Component {
                 let groupBtn = [
                     { title: "Create Job Sheet",    icon: "ion-plus",      color: "primary",    function: () => this.creatJobSheetModal(key.sales_id)},
                     { title: "View Job Order",      icon: "ion-eye",        color: "info",      function: () => this.openViewJobOrderDetails(key.sales_id) },
+                    { title: "View Job Order Process",      icon: "ion-document-text",        color: "success",      function: () => this.openJobOrderProcess(key.sales_id) },
                 ];
                 let x = {
                     salesID :      "SOID" + key.sales_id.padStart(5, "0"),
@@ -55,6 +57,23 @@ class JobOrders extends Component {
             });
             this.setState({ salesData: temp_data })
         }
+    }
+
+    openJobOrderProcess = async (e) =>{
+        let id = e;
+        let url = Config.base_url + 'warehouse/getJobOrderProcess/' + id,
+        response = await axios.get(url);
+        let temp_data =[];
+        let main_data = [];
+        let cust = [];
+        if (response.data.msg == 'success') {
+            let data_temp_id = 1;
+            this.props.handle_changes('job_order_process_data',response.data.result);
+            this.props.set_toggle_modal('isModalOpenProcess');
+        }else{
+            Alertify.error('No Data Yet!');
+        }
+
     }
 
     openViewJobOrderDetails = async (e) =>{
@@ -141,6 +160,7 @@ class JobOrders extends Component {
         return (
             <AUX>
 
+                <ViewProcess/>
                 <ModalView/>
                 <ModalViewDetails refresh={() => this.displayJobSheetData(this.props.job_sheet_id)}/>
 
@@ -168,14 +188,16 @@ class JobOrders extends Component {
 
 const mapStateToProps = state => {
     return {
-        isModalOpen             : state.warehouseReducer.isModalOpen,
-        displayJSModal          : state.warehouseReducer.displayJSModal,
-        job_order_data          : state.warehouseReducer.job_order_data,
-        job_order_data_company  : state.warehouseReducer.job_order_data_company,
-        job_order_job_sheet_data  : state.warehouseReducer.job_order_job_sheet_data,
-        job_order_data_cust  : state.warehouseReducer.job_order_data_cust,
-        job_sheet_id  : state.warehouseReducer.job_sheet_id,
-        is_job_sheet_complete  : state.warehouseReducer.is_job_sheet_complete,
+        isModalOpen                 : state.warehouseReducer.isModalOpen,
+        displayJSModal              : state.warehouseReducer.displayJSModal,
+        job_order_data              : state.warehouseReducer.job_order_data,
+        job_order_data_company      : state.warehouseReducer.job_order_data_company,
+        job_order_job_sheet_data    : state.warehouseReducer.job_order_job_sheet_data,
+        job_order_data_cust         : state.warehouseReducer.job_order_data_cust,
+        job_sheet_id                : state.warehouseReducer.job_sheet_id,
+        is_job_sheet_complete       : state.warehouseReducer.is_job_sheet_complete,
+        isModalOpenProcess          : state.warehouseReducer.isModalOpenProcess,
+        job_order_process_data      : state.warehouseReducer.job_order_process_data,
     }
 }
 const mapActionToProps = dispatch => {
