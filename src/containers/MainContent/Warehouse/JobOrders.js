@@ -42,7 +42,7 @@ class JobOrders extends Component {
             const m = response.data.list.map((key, idx) => {
                 let groupBtn = [
                     { title: "Create Job Sheet",    icon: "ion-plus",      color: "primary",    function: () => this.creatJobSheetModal(key.sales_id)},
-                    { title: "View Job Order",      icon: "ion-eye",        color: "info",      function: () => this.openViewJobOrderDetails(key.sales_id) }
+                    { title: "View Job Order",      icon: "ion-eye",        color: "info",      function: () => this.openViewJobOrderDetails(key.sales_id) },
                 ];
                 let x = {
                     salesID :      "SOID" + key.sales_id.padStart(5, "0"),
@@ -93,11 +93,12 @@ class JobOrders extends Component {
 
     }
 
+
     displayJobSheetData = async (e) =>{
         let id = this.props.job_sheet_id;
         let url = Config.base_url + 'warehouse/GetJobSheet/' + id,
         response = await axios.get(url);
-        let temp_data =[];
+
         this.props.handle_changes('job_order_job_sheet_data',response.data);
     }
 

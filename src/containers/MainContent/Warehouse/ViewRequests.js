@@ -71,7 +71,6 @@ class ViewRequests extends Component {
 		let temp_data = [];
 		let url = Config.base_url + 'warehouse/get_requests';
 		response = await axios.post(url, '');
-		console.log(response.data)
 		if (response.data) {
 			const m = response.data.map((key) => {
 				let x = {
@@ -204,7 +203,7 @@ class ViewRequests extends Component {
 				<Modal isOpen={this.state.modalOpenDel} toggle={this.toggleDel}>
 				  <ModalHeader toggle={this.toggleDel}>Approve Request</ModalHeader>
 				  <ModalBody>
-					  <p>Are you sure you to approve this request?</p>
+					  <p>Are you sure to approve this request?</p>
 				   <ModalFooter>
 						<Button color="primary" className="btn btn-secondary waves-effect" onClick={this.toggleDel}>Cancel</Button>
 						<Button type="submit" onClick={this.approveBtn} color="success" className="btn btn-secondary waves-effect">Yes</Button>
