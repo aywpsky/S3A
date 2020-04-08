@@ -1,23 +1,39 @@
 import React , {Component } from 'react';
 import { connect } from 'react-redux';
 import {Bar} from 'react-chartjs-2';
-
+import axios from 'axios';
+import Config from '../../../config/Config';
+let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   class TotalSales extends Component{
 
     constructor(props) {
         super(props);
         this.state ={
+            data : []
          }
     }
 
-			render() {
+    componentDidMount(){
+        this.fetchdata();
+    }
 
+    fetchdata = () => {
+        let data = [];
+        const url = Config.base_url + 'dashboard/totalsales';
+        axios.get(url).then( res => {
+            res.data.map((val , idx) => {
+                data.push(val);
+            });
+        }) ;
+        const me = this;
+        setTimeout(function(){ me.setState({data}); }, 1000);
+    }
+
+			render() {
                 const data = {
-                    labels: ['2015','2016','2017','2018','2018','2018'],
+                    labels: months,
                     datasets: [
                       {
-                          label: 'Total Sales',
-                          fill: false,
                           lineTension: 0.1,
                           backgroundColor: 'rgba(75,195,192,0.4)',
                           borderColor: 'rgba(75,196,192,1)',
@@ -34,12 +50,13 @@ import {Bar} from 'react-chartjs-2';
                           pointHoverBorderWidth: 2,
                           pointRadius: 3,
                           pointHitRadius: 50,
-                          data: [46, 55, 75, 55, 70,65]
+                          data: this.state.data
                       }
                     ]
                   };
-
+                
 				return (
+
                   <div>
 
                    {this.props.side !=='small' ?

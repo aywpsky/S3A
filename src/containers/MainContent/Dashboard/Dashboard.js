@@ -21,42 +21,47 @@ class Dashboard extends Component {
                 </Row>
 
                 <Row>
-                    <Col md={6} sm={12}>
+                    <Col md={12}>
+                        <Row>
+                            <Col md={6}>
+                                <Card>
+                                    <CardBody>
+                                        <ProductionCost />
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                            <Col md={6}>
+                                <Card>
+                                    <CardBody>
+                                        <FinishedProduct />
+                                    </CardBody>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col md={12}>
                         <Card>
                             <CardBody>
                                 <Row>
                                     <Col md={12}>
-										<h4 class="mt-0 header-title">Production Cost</h4>
-                                        <ProductionCost />
-                                    </Col>
-                                </Row>
-								<hr/>
-                                <Row>
-                                    <Col md={12}>
-										<h4 class="mt-0 header-title">Total Cost of Finished Product</h4>
-                                        <FinishedProduct />
+                                        <h4 class="mt-0 header-title">Total Sales</h4>
+                                        <TotalSales />
                                     </Col>
                                 </Row>
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col md={6}sm={12}>
+                </Row>
+                <Row>
+                    <Col md={12}>
                         <Card>
                             <CardBody>
                                 <Row>
                                     <Col md={12}>
-                                        <h4 class="mt-0 header-title">Inventory Turnover</h4>
                                         <TurnOver />
-                                    </Col>
-                                </Row>
-                            </CardBody>
-                        </Card>
-                        <Card>
-                            <CardBody>
-                                <Row>
-                                    <Col md={12}>
-                                        
-                                        <TotalSales />
                                     </Col>
                                 </Row>
                             </CardBody>

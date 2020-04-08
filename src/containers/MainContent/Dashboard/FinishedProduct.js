@@ -13,33 +13,45 @@ class FinishedProduct extends Component {
         this.state = {
 			prog: 0,
 			total: 0,
-			date :  Moment(new Date().toLocaleDateString('en-US', DATE_OPTIONS)).format('Y-MM')
+            cost : []
+			// date :  Moment(new Date().toLocaleDateString('en-US', DATE_OPTIONS)).format('Y-MM')
         }
     }
 
     componentDidMount() {
-        this.getProgressData();
-		console.log(this.state.date);
+        this.fetchdata();
     }
 
-    getChartData = () => {
-
+    fetchdata = () => {
+        const url = Config.base_url + 'dashboard/finishedproduct';
+        axios.get(url).then( res => {
+            this.setState({
+                total : res.data.total,
+                cost : res.data.cost
+            });
+        });
 	}
 
-	getProgressData = () => {
-		const {date} = this.state
-		const url = Config.base_url + `expenses/getJobOrderList/${date}`;
-		axios.get(url).then( res => {
-            console.log(res);
-            return;
-			const {total_cost} = res.data.list;
-			let total = 0;
-			total_cost.forEach((value, i) => {
-				total = total + value
-			});
-			this.setState({total});
-		})
-	}
+    calc = (amount) => {
+        var total = this.state.total - amount
+
+        return (total / amount) * 100;
+    }
+
+	// getProgressData = () => {
+	// 	const {date} = this.state
+	// 	const url = Config.base_url + `expenses/getJobOrderList/${date}`;
+	// 	axios.get(url).then( res => {
+    //         console.log(res);
+    //         return;
+	// 		const {total_cost} = res.data.list;
+	// 		let total = 0;
+	// 		total_cost.forEach((value, i) => {
+	// 			total = total + value
+	// 		});
+	// 		this.setState({total});
+	// 	})
+	// }
 
 	render(){
 	    return(
@@ -50,28 +62,25 @@ class FinishedProduct extends Component {
 					</Col>
 					<Col md={8}  className="f_product_cont">
 						<Label>{""}</Label>
-						<ProgressBar now={this.state.prog} label={`Test Label${this.state.prog}%`} /> <br/>
+						<ProgressBar now={this.state.total} label={this.state.total} /> <br/>
 					</Col>
 				</Row>
-				<Row>
-					<Col md={4} className="f_product_cont">
-						<Label>Testing</Label>
-					</Col>
-					<Col md={8}  className="f_product_cont">
-						<Label>{""}</Label>
-						<ProgressBar now={this.state.prog} label={`Test Label${this.state.prog}%`} /> <br/>
-					</Col>
+				{
+                    this.state.cost.map((val , idx) => {
+                        return(
+                            <Row>
+            					<Col md={4} className="f_product_cont">
+            						<Label>{val.account}</Label>
+            					</Col>
+            					<Col md={8}  className="f_product_cont">
+                                    <Label>{""}</Label>
+            						<ProgressBar now={this.calc(val.amount)} label={val.amount} /> <br/>
+            					</Col>
 
-				</Row>
-				<Row>
-					<Col md={4} className="f_product_cont">
-						<Label>Testing</Label>
-					</Col>
-					<Col md={8}  className="f_product_cont">
-						<Label>{""}</Label>
-						<ProgressBar now={this.state.prog} label={'Test Label'} /> <br/>
-					</Col>
-				</Row>
+            				</Row>
+                        )
+                    })
+                }
 			</AUX>
 	    );
 	}

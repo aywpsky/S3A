@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import {Line} from 'react-chartjs-2';
-
+let months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 export default class TurnOver extends Component{
   constructor(props){
       super(props);
@@ -29,7 +29,7 @@ export default class TurnOver extends Component{
 
   render() {
       const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July','August'],
+  labels: months,
   datasets: [
     {
         label: 'Inventory Turnover',
