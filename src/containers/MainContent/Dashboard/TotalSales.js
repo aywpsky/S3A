@@ -34,6 +34,7 @@ let months = ['January','February','March','April','May','June','July','August',
                     labels: months,
                     datasets: [
                       {
+                          label : 'Total Sales',
                           lineTension: 0.1,
                           backgroundColor: 'rgba(75,195,192,0.4)',
                           borderColor: 'rgba(75,196,192,1)',
@@ -54,30 +55,30 @@ let months = ['January','February','March','April','May','June','July','August',
                       }
                     ]
                   };
-                
-				return (
 
-                  <div>
 
-                   {this.props.side !=='small' ?
+
+                return (
+
+                    <div>
+
+                    {this.props.side !=='small' ?
                     <Bar
-                    data={data}
-                    width={200}
-                    height={400}
-                    options={{ maintainAspectRatio: false  }}
-                />
-                :
-                <Bar
-                data={data}
-                width={100}
-                height={295}
-                options={{ maintainAspectRatio: false  }}
-            />
-             }
-
-
-              </div>
-				);
+                        data={data}
+                        width={200}
+                        height={400}
+                        options={{ maintainAspectRatio: false  }}
+                    />
+                    :
+                    <Bar
+                        data={data}
+                        width={100}
+                        height={295}
+                        options={{ maintainAspectRatio: false  }}
+                    />
+                    }
+                    </div>
+                );
 			  }
 			}
 
