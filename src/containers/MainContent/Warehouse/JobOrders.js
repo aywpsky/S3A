@@ -39,7 +39,7 @@ class JobOrders extends Component {
         let temp_data = [];
         let url = Config.base_url + 'warehouse/getSalesOrder';
         response = await axios.post(url, '');
-        if (response.data) {
+        if (response.data.status == 'ok') {
             const m = response.data.list.map((key, idx) => {
                 let groupBtn = [
                     { title: "Create Job Sheet",    icon: "ion-plus",      color: "primary",    function: () => this.creatJobSheetModal(key.sales_id)},
