@@ -758,7 +758,7 @@ class PurchaseOrder extends Component{
                           <div className="card m-b-20">
                               <div className="card-body table_shift" >
                                  <MDBDataTable
-                                    className=""
+                                    className="Purchase_order_table"
                                     responsive
                                     bordered
                                     hover

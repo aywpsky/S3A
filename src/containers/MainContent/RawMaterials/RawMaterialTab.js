@@ -33,7 +33,7 @@ class Raw_Material extends Component {
                selectvalue       : false,
                raw_limit         : '',
                material_limit    : '',
-               uom               :''
+               uom               : '',
             }
             this.validator = new SimpleReactValidator();
             this.removeBtn = this.removeBtn.bind(this);
@@ -358,9 +358,9 @@ class Raw_Material extends Component {
                               <Input type="select" name="uom" onChange= {(e) => this.setState({uom : e.target.value})}>
                                  <option value="pcs">pcs</option>
                                  <option value="gal">gal</option>
-                                 <option value="dia">dia</option>
                               </Input>
-                          <span id="err">{this.validator.message('uom', this.state.uom, 'required')}</span>
+                                 <span id="err">{this.validator.message('uom', this.state.uom, this.state.action !== 'Edit'?'required':'')}</span>
+
                     </div>
 
                     {/*

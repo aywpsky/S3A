@@ -3137,6 +3137,8 @@ top: 100px; */
 .navbar-custom{
    box-shadow: 5px 10px 30px #88888
 }
+.Purchase_order_table tbody tr td{text-align: center;}
+.rawMatTable tbody tr td{text-align: center;}
 .groupBtn{
    color: #fff !important;
    padding: 4px !important;
@@ -3145,6 +3147,7 @@ top: 100px; */
    margin: 0 0 0 0 !important;
    box-shadow: 0px 2px 5px #888;
    margin-right: 10px !important;
+   margin-bottom: 5px !important;
    font-size: 15px;
 }
 .groupBtn:hover{

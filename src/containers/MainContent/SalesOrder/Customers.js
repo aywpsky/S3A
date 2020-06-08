@@ -17,7 +17,7 @@ class Customers extends Component {
     render(){
         return(
             <Input type="select" name="customer">
-                {data.map( val => {
+                {data && data.map( val => {
                     return <option value={val.cust_id}>{val.company}</option>
                 })}
             </Input>
