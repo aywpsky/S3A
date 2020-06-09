@@ -4,6 +4,7 @@ import {Modal , ModalHeader , ModalBody , ModalFooter , Row, Col , FormGroup , L
 import DatePicker from "react-datepicker";
 import SimpleReactValidator from 'simple-react-validator';
 import Alertify from 'alertifyjs';
+import CreatableSelect from 'react-select/creatable';
 import axios from 'axios';
 import Config from '../../../config/Config';
 import Helper from '../../../config/Helper';
@@ -28,6 +29,13 @@ const initalState = {
 class AddSalesOrder extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            selectvalue       : false,
+            customer_data     : [],
+            customer_company  : [],
+            customer_id       : [] ,
+            supp_req         : '',
+        }
         this.state = initalState;
         this.validator = new SimpleReactValidator();
     }
@@ -40,16 +48,19 @@ class AddSalesOrder extends Component {
 		Alertify.defaults = Config.AlertConfig
 		const {addMore} = this.state;
 		let temp_form = new Array();
+         this.GetSupplier();
 		// await this.setState({addMore : temp_form});
 	}
 
     submit = async(form) => {
         form.preventDefault();
 
+        console.log(this.state)
         if (this.validator.allValid()) {
-
+             const {customer_id }   = this.state;
             let url = Config.base_url + 'sales/CreateSalesOrder',
             formData = new FormData(form.target);
+             formData.append('company' , customer_id);
             // formData.append('dispatch_date', Helper.formatDate(this.props.date));
             const response = await axios.post(url, formData);
             if (response.data.status == 'success') {
@@ -59,8 +70,9 @@ class AddSalesOrder extends Component {
                 this.reset();
             } else {
                 Alertify.success(response.data.msg);
-            }
 
+            }
+             this.GetSupplier();
         } else {
             this.validator.showMessages();
             this.forceUpdate();
@@ -92,6 +104,47 @@ class AddSalesOrder extends Component {
 		this.setState({addMore});
 		this.props.RemoveDataByIdx(parent_index);
 	}
+    GetSupplier = async() => {
+        let url = Config.base_url + 'sales/customerlist';
+        let response = await axios.get(url);
+        let temp_data = [];
+        console.log(response.data.status);
+        if (response.data.status == 'success') {
+
+            response.data.list.map((data , idx) => {
+                let Options = {
+                    value : data.cust_id,
+                    label : data.company
+                }
+                temp_data.push(Options);
+            });
+
+            await this.setState({Options : temp_data});
+        }
+
+    }
+    handleSelectChange = (newValue , actionMeta) => {
+       var value = [];
+       var label = [];
+
+       // if (newValue != null) {
+       //     console.log( newValue.value)
+       //     for (var i = 0, l = newValue.length; i < l; i++) {
+       //         console.log(newValue)
+       //           value.push(newValue[i].value);
+       //           label.push(newValue[i].label);
+       //      }
+       // }
+
+       this.state.customer_id = (newValue.value ? newValue.value : false);
+       this.state.customer_company = (newValue.label ? newValue.label : false);
+       this.setState({customer_data: newValue})
+
+       if (this.state.customer_id == false)
+           this.setState({supp_req: 'This field is required.'})
+       else
+           this.setState({supp_req : ''});
+    }
 
     SpliceMaterial = (parent_idx , child_index) => {
 		const {addMore} = this.state;
@@ -118,7 +171,21 @@ class AddSalesOrder extends Component {
                         <Col md={6}>
                             <FormGroup>
                                 <Label className="withClose">Customer</Label>
-                                <Customers />
+                                {this.state.selectvalue ?(
+                                <CreatableSelect
+                                    isClearable
+                                    onChange      = {this.handleSelectChange}
+                                    options       = {this.state.Options}
+                                    value         = {this.state.customer_data}
+                                  />
+                               ):(
+                                  <CreatableSelect
+                                     isClearable
+                                     onChange     = {this.handleSelectChange}
+                                     options      = {this.state.Options}
+                                   />
+                                )}
+                                 <span id="err">{this.validator.message('customer', this.state.customer_data, 'required')}</span>
                             </FormGroup>
                         </Col>
 					</Row>
